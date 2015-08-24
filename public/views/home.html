@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h5>Reports for {{reportTime | date:'MMM, yyyy'}}
+      <span class="row-count-info" ng-if="searchText.length > 0">(Showing {{filtered.length}} <ng-pluralize count="filtered.length"
+                                                                                                            when="{'0': '',
+                     'one': 'result',
+                     'other': 'results'}"></ng-pluralize>)</span>
+      <span class="pull-right">Total records : {{rows.length}}</span>
+    </h5>
+    <form role="search">
+      <div class="form-group">
+        <input type="text" ng-model="searchText" class="form-control" placeholder="Search by task, organization or anything">
+      </div>
+    </form>
+  </div>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th ng-repeat="header in tableHeaders" class="table-header-column">{{ header }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="row in filtered = (rows | filter:searchText)">
+      <td class="compound-table-column">
+        <p class="title-label">{{ row.taskTitle }}</p>
+        <p class="detail-text-label"><strong>ID</strong> {{ row.taskID }}</p>
+      </td>
+      <td class="compound-table-column">
+        <p class="title-label">{{ row.organizationName }}</p>
+        <p class="detail-text-label"><strong>ID</strong> {{ row.organizationID }}</p>
+      </td>
+      <td class="table-column">{{ row.taskPublishDate | date:'dd MMM, yyyy' }}</td>
+      <td class="table-column">{{ row.channel }}</td>
+      <td class="table-column">{{ row.NCImageGUID }}</td>
+      <td class="table-column">{{ row.ShutterstockImageID }}</td>
+      <td class="table-column">{{ row.licensedDate | date:'dd MMM, yyyy' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
