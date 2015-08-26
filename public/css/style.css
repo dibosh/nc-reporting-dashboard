@@ -6,16 +6,20 @@
 .dashboard{
     padding-top: 15px;
 }
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+/*Table Style Override*/
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th,
+.table-striped>tbody>tr>td, .table-striped>tbody>tr>th, .table-striped>tfoot>tr>td, .table-striped>tfoot>tr>th, .table-striped>thead>tr>td, .table-striped>thead>tr>th{
     padding: 15px 10px;
     vertical-align: middle;
     text-transform: capitalize;
     min-width: 150px;
     max-width: 300px;
+    width: 100%;
 }
 
 .table-column, .compound-table-column, .table-header-column{
     color: #3c3c3c;
+    border-bottom: 1px solid #ddd;
 }
 
 .table-column:not(:last-child), .compound-table-column:not(:last-child), .table-header-column:not(:last-child){
@@ -42,7 +46,6 @@
     color: #aaa;
     font-weight: 400;
 }
-
 /* Searchbar */
 .form-control{
     min-width: 400px;
@@ -51,4 +54,8 @@
 /* Some overrides */
 .navbar-right{
     margin-right: 0;
+}
+
+.form-control{
+    min-width: 30%;
 }

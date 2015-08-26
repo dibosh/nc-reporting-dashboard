@@ -1,20 +1,40 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h5>Reports for {{reportTime | date:'MMM, yyyy'}}
-      <span class="row-count-info" ng-if="searchText.length > 0">(Showing {{filtered.length}} <ng-pluralize count="filtered.length"
-                                                                                                            when="{'0': '',
+      <span class="row-count-info" ng-if="searchText.length > 0">(Showing {{filtered.length}} <ng-pluralize
+        count="filtered.length"
+        when="{'0': '',
                      'one': 'result',
                      'other': 'results'}"></ng-pluralize>)</span>
       <span class="pull-right">Total records : {{rows.length}}</span>
     </h5>
     <form role="search">
       <div class="form-group">
-        <input type="text" ng-model="searchText" class="form-control" placeholder="Search by task, organization or anything">
+        <input type="text" ng-model="searchText" class="form-control"
+               placeholder="Search by task, organization or anything">
+
+        <div class="filters">
+          <div class="row filters">
+            <div class="col-md-4">
+              <h6>From</h6>
+              <input type="date" class="form-control" ng-model="startDate" is-open="status.opened" min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true" close-text="Close" required="required" style="">
+            </div>
+            <div class="col-md-4">
+              <h6>To</h6>
+              <input type="date" class="form-control" ng-model="endDate" is-open="status.opened" min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true" close-text="Close" required="required" style="">
+            </div>
+          </div>
+
+        </div>
       </div>
     </form>
   </div>
 
-  <table class="table">
+  <table class="table-striped">
     <thead>
     <tr>
       <th ng-repeat="header in tableHeaders" class="table-header-column">{{ header }}</th>
@@ -24,10 +44,12 @@
     <tr ng-repeat="row in filtered = (rows | filter:searchText)">
       <td class="compound-table-column">
         <p class="title-label">{{ row.taskTitle }}</p>
+
         <p class="detail-text-label"><strong>ID</strong> {{ row.taskID }}</p>
       </td>
       <td class="compound-table-column">
         <p class="title-label">{{ row.organizationName }}</p>
+
         <p class="detail-text-label"><strong>ID</strong> {{ row.organizationID }}</p>
       </td>
       <td class="table-column">{{ row.taskPublishDate | date:'dd MMM, yyyy' }}</td>
