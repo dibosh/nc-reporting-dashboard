@@ -56,6 +56,11 @@
     margin-right: 0;
 }
 
-.form-control{
-    min-width: 30%;
+.filters .form-control{
+    max-width: 400px;
+    min-width: 100px;
+}
+
+.filters .col-md-4{
+    width: 25%;
 }

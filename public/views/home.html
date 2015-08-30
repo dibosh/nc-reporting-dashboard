@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h5>Reports for {{reportTime | date:'MMM, yyyy'}}
-      <span class="row-count-info" ng-if="searchText.length > 0">(Showing {{filtered.length}} <ng-pluralize
+      <span class="row-count-info" ng-if="filtered.length > 0 && filtered.length < rows.length">(Showing {{filtered.length}} <ng-pluralize
         count="filtered.length"
         when="{'0': '',
                      'one': 'result',
@@ -14,24 +14,48 @@
                placeholder="Search by task, organization or anything">
 
         <div class="filters">
-          <div class="row filters">
+          <div class="row">
             <div class="col-md-4">
-              <h6>From</h6>
-              <input type="date" class="form-control" ng-model="startDate" is-open="status.opened" min-date="minDate"
+              <h6>Start Publish Date</h6>
+              <input type="date" class="form-control" ng-model="startPublishDate" is-open="status.opened"
+                     min-date="minDate"
                      max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                      ng-required="true" close-text="Close" required="required" style="">
             </div>
             <div class="col-md-4">
-              <h6>To</h6>
-              <input type="date" class="form-control" ng-model="endDate" is-open="status.opened" min-date="minDate"
+              <h6>End Publish Date</h6>
+              <input type="date" class="form-control" ng-model="endPublishDate" is-open="status.opened"
+                     min-date="minDate"
                      max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                      ng-required="true" close-text="Close" required="required" style="">
+            </div>
+            <div class="col-md-4">
+              <h6>Start Licensed Date</h6>
+              <input type="date" class="form-control" ng-model="startLicensedDate" is-open="status.opened"
+                     min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true">
+            </div>
+            <div class="col-md-4">
+              <h6>End Licensed Date</h6>
+              <input type="date" class="form-control" ng-model="endLicensedDate" is-open="status.opened"
+                     min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true">
             </div>
           </div>
 
         </div>
       </div>
     </form>
+  </div>
+
+  <div class="alert alert-warning" role="alert" ng-if="filtered.length == 0 && rows.length > 0">
+    Nothing matched your search. Try rephrasing or changing the date ranges.
+  </div>
+
+  <div class="alert alert-danger" role="alert" ng-if="rows.length == 0">
+    We were unable to fetch what you were looking for! Try refreshing the page.
   </div>
 
   <table class="table-striped">
@@ -41,7 +65,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="row in filtered = (rows | filter:searchText)">
+    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | dateRangeFilter:'licensedDate':startLicensedDate:endLicensedDate)">
       <td class="compound-table-column">
         <p class="title-label">{{ row.taskTitle }}</p>
 
