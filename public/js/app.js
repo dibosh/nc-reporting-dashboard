@@ -8,7 +8,7 @@ var application = angular.module('ReportingDashboard',
     'Filters',
     'Controllers',
     'ui.bootstrap',
-    'ngRoute'
+    'ngRoute',
   ]
 )
   //.constant('_', window._);

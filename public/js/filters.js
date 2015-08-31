@@ -2,6 +2,7 @@ angular.module('Filters')
   .filter('dateRangeFilter', function () {
     return function (items, dateProp, startDate, endDate) {
       return _.filter(items, function(item) {
+        if (!startDate || !endDate) { return true; }
         var publishTime = new Date(item[dateProp]).getTime();
         return startDate.getTime() <= publishTime && publishTime <= endDate.getTime();
       });

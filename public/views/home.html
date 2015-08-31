@@ -54,6 +54,10 @@
     Nothing matched your search. Try rephrasing or changing the date ranges.
   </div>
 
+  <div class="alert alert-warning" role="alert" ng-if="loading.data">
+    Data is being loaded. Please be patient. We are sorry for the unnecessary delay.
+  </div>
+
   <div class="alert alert-danger" role="alert" ng-if="rows.length == 0">
     We were unable to fetch what you were looking for! Try refreshing the page.
   </div>
@@ -65,7 +69,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | dateRangeFilter:'licensedDate':startLicensedDate:endLicensedDate)">
+    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | dateRangeFilter:'licensedDate':startLicensedDate:endLicensedDate | orderBy:'-taskPublishDate')">
       <td class="compound-table-column">
         <p class="title-label">{{ row.taskTitle }}</p>
 

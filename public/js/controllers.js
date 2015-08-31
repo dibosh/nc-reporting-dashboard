@@ -1,7 +1,12 @@
 // Let's do the nasty way for now- don't separate to different files
 angular.module('Controllers')
   .controller('MainController', function ($scope,
-                                          Reports) {
+                                          Reports, $parse) {
+
+    // Define if data will be fetched from DB or read from csv file directly
+    var usingStaticFile = true;
+    $scope.loading = { data : true };
+
     $scope.searchText = '';
     $scope.tableHeaders = [
       'Task',
@@ -13,14 +18,34 @@ angular.module('Controllers')
       'Licensed Date'
     ];
 
-    Reports.all().then(function (res) {
-      // Sorted rows- latest one should be the first
-      $scope.rows = _.sortByOrder(res.data, function (row) {
-        return new Date(row.taskPublishDate).getTime();
-      }, ['desc']);
-
-      _setupData();
-    });
+    if (usingStaticFile) {
+      Reports.allFromFile().then(function (res) {
+        $scope.loading.data = false;
+        // The file is big and fetch it in worker thread
+        Papa.parse(res.data, {
+          header: true,
+          complete: function(results) {
+            $scope.rows = _.map(results.data, function (row) {
+              row.taskPublishDate = new Date(row.taskPublishDate);
+              row.licensedDate = new Date(row.licensedDate);
+              return row;
+            });
+            _setupData();
+          }
+        });
+      });
+    } else {
+      Reports.all().then(function (res) {
+        $scope.loading.data = false;
+        // Sorted rows- latest one should be the first
+        $scope.rows = _.map(res.data, function (row) {
+          row.taskPublishDate = new Date(row.taskPublishDate);
+          row.licensedDate = new Date(row.licensedDate);
+          return row;
+        });
+        _setupData();
+      });
+    }
 
     var _setupData = function () {
       var latestRecord = $scope.rows[0];
@@ -35,5 +60,5 @@ angular.module('Controllers')
       $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);
       $scope.startLicensedDate.setMonth($scope.startLicensedDate.getMonth() - 1);
       $scope.endLicensedDate.setMonth($scope.endLicensedDate.getMonth() + 1);
-    }
+    };
   });
