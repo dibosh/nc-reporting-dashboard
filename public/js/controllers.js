@@ -9,7 +9,7 @@ angular.module('Controllers')
 
     $scope.searchText = '';
     $scope.tableHeaders = [
-      'Task',
+      'Article',
       'Organization',
       'Task Publish Date',
       'Publish Channel',
@@ -82,11 +82,12 @@ angular.module('Controllers')
     var _setupData = function () {
       var latestRecord = $scope.rows[0];
       var oldestRecord = $scope.rows[$scope.rows.length - 1];
-      $scope.reportTime = Date.now();
       $scope.startPublishDate = new Date(oldestRecord.taskPublishDate);
       $scope.endPublishDate = new Date(latestRecord.taskPublishDate);
       // Add some buffer of about 2 months
       $scope.startPublishDate.setMonth($scope.startPublishDate.getMonth() - 1);
       $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);
+
+      $scope.reportTime = $scope.endPublishDate;
     };
   });
