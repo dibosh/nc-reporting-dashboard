@@ -29,20 +29,6 @@
                      max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                      ng-required="true" close-text="Close" required="required" style="">
             </div>
-            <div class="col-md-4">
-              <h6>Start Licensed Date</h6>
-              <input type="date" class="form-control" ng-model="startLicensedDate" is-open="status.opened"
-                     min-date="minDate"
-                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                     ng-required="true">
-            </div>
-            <div class="col-md-4">
-              <h6>End Licensed Date</h6>
-              <input type="date" class="form-control" ng-model="endLicensedDate" is-open="status.opened"
-                     min-date="minDate"
-                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                     ng-required="true">
-            </div>
           </div>
 
         </div>
@@ -69,7 +55,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | dateRangeFilter:'licensedDate':startLicensedDate:endLicensedDate | orderBy:'-taskPublishDate')">
+    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | orderBy:'-taskPublishDate')">
       <td class="compound-table-column">
         <p class="title-label">{{ row.taskTitle }}</p>
 

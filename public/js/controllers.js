@@ -46,6 +46,26 @@ angular.module('Controllers')
         _setupData();
       });
     }
+    // Date range validation
+    $scope.$watch(function(scope) { return scope.startPublishDate },
+      function(newValue, oldValue) {
+        if (newValue && newValue.getTime() > $scope.endPublishDate.getTime()){
+          $scope.startPublishDate = oldValue;
+        }else{
+          $scope.startPublishDate = newValue;
+        }
+      }
+    );
+
+    $scope.$watch(function(scope) { return scope.endPublishDate },
+      function(newValue, oldValue) {
+        if (newValue && newValue.getTime() < $scope.startPublishDate.getTime()){
+          $scope.endPublishDate = oldValue;
+        }else{
+          $scope.endPublishDate = newValue;
+        }
+      }
+    );
 
     var _setupData = function () {
       var latestRecord = $scope.rows[0];
@@ -53,12 +73,8 @@ angular.module('Controllers')
       $scope.reportTime = Date.now();
       $scope.startPublishDate = new Date(oldestRecord.taskPublishDate);
       $scope.endPublishDate = new Date(latestRecord.taskPublishDate);
-      $scope.startLicensedDate = new Date(oldestRecord.licensedDate);
-      $scope.endLicensedDate = new Date(latestRecord.licensedDate);
       // Add some buffer of about 2 months
       $scope.startPublishDate.setMonth($scope.startPublishDate.getMonth() - 1);
       $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);
-      $scope.startLicensedDate.setMonth($scope.startLicensedDate.getMonth() - 1);
-      $scope.endLicensedDate.setMonth($scope.endLicensedDate.getMonth() + 1);
     };
   });
