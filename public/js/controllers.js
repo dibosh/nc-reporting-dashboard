@@ -18,22 +18,30 @@ angular.module('Controllers')
       'Licensed Date'
     ];
 
-    if (usingStaticFile) {
-      Reports.allFromFile().then(function (res) {
+    $scope.currentPage = 1;
+    $scope.pageSize = 15;
+    $scope.visiblePages = 5;
+
+    $scope.pageChanged = function () {
+      _fetchData();
+    }
+
+    var isFirstTimeFetch = true; // If the data is being fetched for the first time
+
+    var _fetchData = function () {
+      Reports.allFromPage($scope.currentPage, $scope.pageSize).then(function (res) {
         $scope.loading.data = false;
-        // The file is big and fetch it in worker thread
-        Papa.parse(res.data, {
-          header: true,
-          complete: function(results) {
-            $scope.rows = _.map(results.data, function (row) {
-              row.taskPublishDate = new Date(row.taskPublishDate);
-              row.licensedDate = new Date(row.licensedDate);
-              return row;
-            });
-            _setupData();
-          }
-        });
+        $scope.rows = res.data.pageData;
+        if (isFirstTimeFetch){
+          $scope.totalRows = res.data.total;
+          isFirstTimeFetch = false;
+        }
+        _setupData();
       });
+    };
+
+    if (usingStaticFile) {
+      _fetchData();
     } else {
       Reports.all().then(function (res) {
         $scope.loading.data = false;

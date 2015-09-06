@@ -29,7 +29,23 @@
                      max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                      ng-required="true" close-text="Close" required="required" style="">
             </div>
+
+            <div class="col-md-4 pull-right text-right">
+              <h6>Pages</h6>
+              <pagination
+                total-items="totalRows"
+                ng-model="currentPage"
+                ng-change="pageChanged()"
+                direction-links="true"
+                items-per-page="pageSize"
+                ng-disabled="filtered.length == 0"
+                max-size="visiblePages"
+                previous-text="‹"
+                next-text="›"
+                ></pagination>
+            </div>
           </div>
+
 
         </div>
       </div>

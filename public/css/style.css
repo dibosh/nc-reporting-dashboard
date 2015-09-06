@@ -64,3 +64,7 @@
 .filters .col-md-4{
     width: 25%;
 }
+
+.pagination{
+    margin: 0;
+}

@@ -1,12 +1,12 @@
 angular.module('Services')
-  .factory('Reports', ['$http', function($http) {
+  .factory('Reports', ['$http', function($http, $parse) {
   return {
     all : function () {
       return $http.get('/api/report/all');
     },
 
-    allFromFile : function () {
-      return $http.get('/static/data');
+    allFromPage : function (pageNumber, pageSize) {
+      return $http.get('/api/report/static/' + pageNumber + '/' + pageSize);
     }
   }
 }])

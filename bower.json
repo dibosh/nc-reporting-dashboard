@@ -7,7 +7,6 @@
     "animate.css": "latest",
     "angular": "latest",
     "angular-route": "latest",
-    "ng-lodash": "latest",
-    "angular-papaparse": "~1.0.0"
+    "ng-lodash": "latest"
   }
 }
