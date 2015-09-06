@@ -5,8 +5,8 @@ angular.module('Services')
       return $http.get('/api/report/all');
     },
 
-    allFromPage : function (pageNumber, pageSize) {
-      return $http.get('/api/report/static/' + pageNumber + '/' + pageSize);
+    allFromPage : function (provider, pageNumber, pageSize) {
+      return $http.get('/api/report/static/' + provider + '/' + pageNumber + '/' + pageSize);
     }
   }
 }])

@@ -29,7 +29,21 @@
                      max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
                      ng-required="true" close-text="Close" required="required" style="">
             </div>
+            <div class="col-md-4">
+              <h6>Provider</h6>
 
+              <div class="btn-group" dropdown>
+                <button id="split-button" type="button" class="btn btn-default">{{providers[selectedProvider]}}</button>
+                <button type="button" class="btn btn-default" dropdown-toggle>
+                  <span class="caret"></span>
+                  <span class="sr-only">Split button!</span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+                  <li role="menuitem" ng-repeat="provider in providers" ng-click="selectProvider($index)"><a href="#">{{provider}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <div class="col-md-4 pull-right text-right">
               <h6>Pages</h6>
               <pagination
@@ -45,14 +59,12 @@
                 ></pagination>
             </div>
           </div>
-
-
         </div>
       </div>
     </form>
   </div>
 
-  <div class="alert alert-warning" role="alert" ng-if="filtered.length == 0 && rows.length > 0">
+  <div class="alert alert-warning" role="alert" ng-if="filtered.length === 0 && rows.length > 0">
     Nothing matched your search. Try rephrasing or changing the date ranges.
   </div>
 
@@ -60,10 +72,10 @@
     Data is being loaded. Please be patient. We are sorry for the unnecessary delay.
   </div>
 
-  <div class="alert alert-danger" role="alert" ng-if="rows.length == 0">
+  <div class="alert alert-danger" role="alert" ng-if="rows.length === 0">
     We were unable to fetch what you were looking for! Try refreshing the page.
   </div>
-
+  <!--Generic-->
   <table class="table-striped">
     <thead>
     <tr>
@@ -71,21 +83,14 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:'taskPublishDate':startPublishDate:endPublishDate | orderBy:'-taskPublishDate')">
-      <td class="compound-table-column">
-        <p class="title-label">{{ row.taskTitle }}</p>
+    <tr
+      ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:dateRangeFilteringInput:startPublishDate:endPublishDate | orderBy:orderByPredicate)">
+      <td class="table-column" ng-repeat="(key, value) in row">
+        <p>{{value}}</p>
       </td>
-      <td class="compound-table-column">
-        <p class="title-label">{{ row.organizationName }}</p>
-
-        <p class="detail-text-label">{{ row.organizationID }}</p>
-      </td>
-      <td class="table-column">{{ row.taskPublishDate | date:'dd MMM, yyyy' }}</td>
-      <td class="table-column">{{ row.channel }}</td>
-      <td class="table-column">{{ row.NCImageGUID }}</td>
-      <td class="table-column">{{ row.ShutterstockImageID }}</td>
-      <td class="table-column">{{ row.licensedDate | date:'dd MMM, yyyy' }}</td>
     </tr>
     </tbody>
   </table>
+  <!--Specific-->
+  <!--<div ng-include="templates[selectedProvider]"></div>-->
 </div>

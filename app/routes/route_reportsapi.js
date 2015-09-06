@@ -11,7 +11,8 @@ var express = require('express'),
   _ = require('lodash-node');
 
 var serverCache = new nodeCache();
-var KEY_CSV_JSON_DATA = 'csvToJson';
+var SHUTTERSTOCK_CSV_JSON_DATA = 'shutterStock';
+var GETTY_CSV_JSON_DATA = 'getty';
 
 router.use(bodyParser.urlencoded( { extended: true } ));
 router.use(methodOverride( function (req, res) {
@@ -27,7 +28,7 @@ router.route('/api/report/all')
   // GET all rows
   .get(function(req, res) {
     // Retrieve all rows from Mongo
-    mongoose.model('TableRow').find({}, function(err, rows) {
+    mongoose.model('ShutterStockRow').find({}, function(err, rows) {
       if (err)
         res.send(err);
       res.json(rows);
@@ -35,16 +36,19 @@ router.route('/api/report/all')
 
   });
 
-router.route('/api/report/static/:pageno/:pagesize')
+router.route('/api/report/static/:provider/:pageno/:pagesize')
   // GET all rows
   .get(function(req, res) {
     // Retrieve all rows from csv
     var pageNo = req.params.pageno;
     var pageSize = req.params.pagesize;
-    var data = serverCache.get(KEY_CSV_JSON_DATA); // Check if the data is already cached
+    var provider = req.params.provider;
+    var cacheKey = provider == 0 ? SHUTTERSTOCK_CSV_JSON_DATA : GETTY_CSV_JSON_DATA;
+    var data = serverCache.get(cacheKey);
+
     if ( data == undefined ){
       var csvConverter = new converter({constructResult:true});
-      var filePath = path.join(__dirname, '../../public/assets/data.csv');
+      var filePath = path.join(__dirname, provider == 0 ? '../../public/assets/shutterstock_data.csv' : '../../public/assets/getty_data.csv');
       var fileStream = fs.createReadStream(filePath);
       // end_parsed will be emitted once parsing finished
       csvConverter.on('end_parsed', function (jsonObj) {
@@ -53,7 +57,7 @@ router.route('/api/report/static/:pageno/:pagesize')
           totalCount: jsonObj.length,
           raw: _.chunk(jsonObj, pageSize)
         };
-        var success = serverCache.set(KEY_CSV_JSON_DATA, data);
+        var success = serverCache.set(cacheKey, data);
         if (success){
           console.log('Saved to cache...');
           res.send({
@@ -76,7 +80,7 @@ router.route('/api/report/static/:pageno/:pagesize')
 
 // Route middleware to validate :id
 router.param('id', function(req, res, next, id) {
-  mongoose.model('TableRow').findById(id, function (err, row) {
+  mongoose.model('ShutterStockRow').findById(id, function (err, row) {
     // If it isn't found, we are going to respond with 404
     if (err) {
       console.log(id + ' was not found');

@@ -1,8 +1,8 @@
-var tableRows = require('./routes/route_table_row.js');
+var reportingAPI = require('./routes/route_reportsapi.js');
 
 module.exports = function(app) {
   // Backend routes
-  app.use('/', tableRows);
+  app.use('/', reportingAPI);
   app.get('*', function(req, res) {
     res.sendfile('./public/index.html');
   });

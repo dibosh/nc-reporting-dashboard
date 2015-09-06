@@ -1,23 +1,59 @@
 // Let's do the nasty way for now- don't separate to different files
 angular.module('Controllers')
   .controller('MainController', function ($scope,
-                                          Reports, $parse) {
+                                          Reports, $parse, $filter) {
 
     // Define if data will be fetched from DB or read from csv file directly
     var usingStaticFile = true;
     $scope.loading = { data : true };
 
     $scope.searchText = '';
-    $scope.tableHeaders = [
-      'Article',
-      'Organization',
-      'Task Publish Date',
-      'Publish Channel',
-      'NC Image GUID',
-      'Shutterstock Image ID',
-      'Licensed Date'
+
+    $scope.tableHeaders = [];
+    // Provider selection
+    //$scope.shutterStockHeaders = [
+    //  'Article',
+    //  'Organization',
+    //  'Task Publish Date',
+    //  'Publish Channel',
+    //  'NC Image GUID',
+    //  'Shutterstock Image ID',
+    //  'Licensed Date'
+    //];
+    //
+    //$scope.gettyHeaders = [
+    //  'Article Task ID',
+    //  'Organization',
+    //  'Task Publish Date',
+    //  'Publish Channel',
+    //  'NC Image GUID',
+    //  'Shutterstock Image ID',
+    //  'Licensed Date'
+    //];
+    //$scope.templates = [
+    //  'views/components/shutterstock-report.html',
+    //  'views/components/getty-report.html'
+    //];
+
+    $scope.providers = [
+      'ShutterStock',
+      'Getty'
     ];
 
+    $scope.selectedProvider = 0;
+
+    var tableHeadersShouldBeGenerated = true;
+
+    $scope.selectProvider = function (index) {
+      $scope.searchText = '';
+      $scope.tableHeaders = [];
+      isFirstTimeFetch = true;
+      tableHeadersShouldBeGenerated = true;
+      $scope.selectedProvider = index;
+      _fetchData();
+    }
+
+    // Pagination Control
     $scope.currentPage = 1;
     $scope.pageSize = 15;
     $scope.visiblePages = 5;
@@ -29,11 +65,17 @@ angular.module('Controllers')
     var isFirstTimeFetch = true; // If the data is being fetched for the first time
 
     var _fetchData = function () {
-      Reports.allFromPage($scope.currentPage, $scope.pageSize).then(function (res) {
+      Reports.allFromPage($scope.selectedProvider, $scope.currentPage, $scope.pageSize).then(function (res) {
         $scope.loading.data = false;
+        // Do some housekeeping on each rows
         $scope.rows = _.map(res.data.pageData, function (row) {
-          row.taskPublishDate = new Date(row.taskPublishDate);
-          row.licensedDate = new Date(row.licensedDate);
+          for (key in row){
+            if(key.toLowerCase().indexOf('date') > -1) row[key] = $filter('date')(new Date(row[key]), 'dd MMM, yyyy');
+            // Any ID except images should be just deleted
+            if(key.toLowerCase().indexOf('organizationid') > -1 || key.toLowerCase().indexOf('taskid') > -1) delete row[key]
+            else if(tableHeadersShouldBeGenerated) $scope.tableHeaders.push(key);
+          }
+          tableHeadersShouldBeGenerated = false;
           return row;
         });
         if (isFirstTimeFetch){
@@ -80,10 +122,12 @@ angular.module('Controllers')
     );
 
     var _setupData = function () {
+      $scope.dateRangeFilteringInput = $scope.selectedProvider == 0 ? 'taskPublishDate' : 'publishDate';
+      $scope.orderByPredicate = '-' + $scope.dateRangeFilteringInput;
       var latestRecord = $scope.rows[0];
       var oldestRecord = $scope.rows[$scope.rows.length - 1];
-      $scope.startPublishDate = new Date(oldestRecord.taskPublishDate);
-      $scope.endPublishDate = new Date(latestRecord.taskPublishDate);
+      $scope.startPublishDate = new Date(oldestRecord.taskPublishDate || oldestRecord.publishDate);
+      $scope.endPublishDate = new Date(latestRecord.taskPublishDate || latestRecord.publishDate);
       // Add some buffer of about 2 months
       $scope.startPublishDate.setMonth($scope.startPublishDate.getMonth() - 1);
       $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);

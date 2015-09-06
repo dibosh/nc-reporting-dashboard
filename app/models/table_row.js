@@ -1,18 +1,6 @@
 var mongoose = require('mongoose');
 
-//var schema = new mongoose.Schema({
-//  'Task Title' : {type : String, default: ''},
-//  'Task ID' : {type : String, default: ''},
-//  'Task Publish Date' : { type: Date, default: Date.now },
-//  'Organization Name' : {type : String, default: ''},
-//  'Organization ID' : {type : String, default: ''},
-//  'Channel' : {type : String, default: ''},
-//  'NC Image GUID' : {type : String, default: ''},
-//  'Shutterstock Image ID' : {type : String, default: ''},
-//  'Licensed Date' : { type: Date, default: Date.now }
-//});
-
-var schema = new mongoose.Schema({
+var ssSchema = new mongoose.Schema({
   'taskTitle' : {type : String, default: ''},
   'taskID' : {type : String, default: ''},
   'taskPublishDate' : { type: Date, default: Date.now },
@@ -24,4 +12,16 @@ var schema = new mongoose.Schema({
   'licensedDate' : { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('TableRow', schema);
+var gettySchema = new mongoose.Schema({
+  'type' : {type : String, default: ''},
+  'taskID' : {type : String, default: ''},
+  'publishDate' : { type: Date, default: Date.now },
+  'organizationID' : {type : String, default: ''},
+  'channel' : {type : String, default: ''},
+  'NCImageGUID' : {type : String, default: ''},
+  'GettyImageID' : {type : String, default: ''},
+  'GettyCollectionID' : {type : String, default: ''}
+});
+
+module.exports = mongoose.model('ShutterStockRow', ssSchema);
+module.exports = mongoose.model('GettyRow', gettySchema);
