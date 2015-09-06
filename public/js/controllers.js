@@ -12,7 +12,7 @@ angular.module('Controllers')
       'Task',
       'Organization',
       'Task Publish Date',
-      'Channel',
+      'Publish Channel',
       'NC Image GUID',
       'Shutterstock Image ID',
       'Licensed Date'
@@ -31,7 +31,11 @@ angular.module('Controllers')
     var _fetchData = function () {
       Reports.allFromPage($scope.currentPage, $scope.pageSize).then(function (res) {
         $scope.loading.data = false;
-        $scope.rows = res.data.pageData;
+        $scope.rows = _.map(res.data.pageData, function (row) {
+          row.taskPublishDate = new Date(row.taskPublishDate);
+          row.licensedDate = new Date(row.licensedDate);
+          return row;
+        });
         if (isFirstTimeFetch){
           $scope.totalRows = res.data.total;
           isFirstTimeFetch = false;
