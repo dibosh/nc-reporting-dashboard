@@ -19,7 +19,8 @@ application.config(['$routeProvider', '$locationProvider', function ($routeProvi
     .when('/home', {
       templateUrl: 'views/home.html',
       controller: 'MainController'
-    });
+    })
+    .otherwise({ redirectTo: '/home' });
 
   $locationProvider.html5Mode(true);
 

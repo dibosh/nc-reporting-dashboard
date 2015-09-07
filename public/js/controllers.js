@@ -40,6 +40,11 @@ angular.module('Controllers')
       'Getty'
     ];
 
+    $scope.visibleRange = {
+      start: 0,
+      end: 0
+    };
+
     $scope.selectedProvider = 0;
 
     var tableHeadersShouldBeGenerated = true;
@@ -136,5 +141,12 @@ angular.module('Controllers')
       $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);
 
       $scope.reportTime = $scope.endPublishDate;
+
+      if($scope.currentPage == 1) $scope.visibleRange = {
+        start: 0,
+        end: 0
+      }; // Reset
+      $scope.visibleRange.start = $scope.visibleRange.end;
+      $scope.visibleRange.end = $scope.visibleRange.start + $scope.rows.length;
     };
   });
