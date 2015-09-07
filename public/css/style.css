@@ -1,25 +1,27 @@
 *{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
     line-height: 1.5;
 }
 .dashboard{
     padding-top: 15px;
 }
 /*Table Style Override*/
+.table{
+    table-layout: fixed;
+}
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th,
 .table-striped>tbody>tr>td, .table-striped>tbody>tr>th, .table-striped>tfoot>tr>td, .table-striped>tfoot>tr>th, .table-striped>thead>tr>td, .table-striped>thead>tr>th{
     padding: 15px 10px;
     vertical-align: middle;
     text-transform: capitalize;
-    min-width: 150px;
-    max-width: 300px;
-    width: 100%;
 }
 
 .table-column, .compound-table-column, .table-header-column{
     color: #3c3c3c;
     border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
 }
 
 .table-column:not(:last-child), .compound-table-column:not(:last-child), .table-header-column:not(:last-child){
@@ -67,4 +69,24 @@
 
 .pagination{
     margin: 0;
+}
+
+/*Width helper*/
+.width10{
+    width: 10%;
+}
+.width20{
+    width: 20%;
+}
+.width30{
+    width: 30%;
+}
+.width40{
+    width: 40%;
+}
+.width50{
+    width: 50%;
+}
+.width60{
+    width: 60%;
 }

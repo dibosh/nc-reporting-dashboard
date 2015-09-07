@@ -69,12 +69,15 @@ angular.module('Controllers')
         $scope.loading.data = false;
         // Do some housekeeping on each rows
         $scope.rows = _.map(res.data.pageData, function (row) {
+          var keyCounts = 0;
           for (key in row){
+            keyCounts++;
             if(key.toLowerCase().indexOf('date') > -1) row[key] = $filter('date')(new Date(row[key]), 'dd MMM, yyyy');
             // Any ID except images should be just deleted
             if(key.toLowerCase().indexOf('organizationid') > -1 || key.toLowerCase().indexOf('taskid') > -1) delete row[key]
             else if(tableHeadersShouldBeGenerated) $scope.tableHeaders.push(key);
           }
+          $scope.widthPercentageForColumn = ((a = 100/keyCounts) < 15 ? 15 : a) + '%';
           tableHeadersShouldBeGenerated = false;
           return row;
         });
