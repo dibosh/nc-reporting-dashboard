@@ -48,12 +48,26 @@
     color: #aaa;
     font-weight: 400;
 }
+
+.usage-overview-table{
+    width: 65%;
+    border-right: 1px solid #ddd;
+}
+
+.usage-graph-wrapper{
+    width: 35%;
+}
+
+
 /* Searchbar */
 .form-control{
     min-width: 400px;
 }
 
 /* Some overrides */
+.nav-tabs{
+    border-bottom: 0;
+}
 .navbar-right{
     margin-right: 0;
 }
@@ -71,22 +85,7 @@
     margin: 0;
 }
 
-/*Width helper*/
-.width10{
-    width: 10%;
-}
-.width20{
-    width: 20%;
-}
-.width30{
-    width: 30%;
-}
-.width40{
-    width: 40%;
-}
-.width50{
-    width: 50%;
-}
-.width60{
-    width: 60%;
+
+.highlighted{
+   font-weight: 700;
 }

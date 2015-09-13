@@ -1,0 +1,94 @@
+<div class="panel panel-default" ng-controller="ReportsCtrl">
+  <div class="panel-heading">
+    <h5>Reports for {{reportTime | date:'MMM, yyyy'}}
+      <span class="row-count-info" ng-if="filtered.length > 0 && filtered.length < rows.length">(Returned {{filtered.length}} <ng-pluralize
+        count="filtered.length"
+        when="{'0': '',
+                     'one': 'result',
+                     'other': 'results'}"></ng-pluralize>)</span>
+      <span class="pull-right">Showing {{visibleRange.start}} - {{visibleRange.end}} of {{totalRows}} Records</span>
+    </h5>
+    <form>
+      <div class="form-group">
+        <input type="text" ng-model="searchText" class="form-control"
+               placeholder="Search by task, organization or anything">
+
+        <div class="filters">
+          <div class="row">
+            <div class="col-md-4">
+              <h6>Start Publish Date</h6>
+              <input type="date" class="form-control" ng-model="startPublishDate" is-open="status.opened"
+                     min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true" close-text="Close" required="required" style="">
+            </div>
+            <div class="col-md-4">
+              <h6>End Publish Date</h6>
+              <input type="date" class="form-control" ng-model="endPublishDate" is-open="status.opened"
+                     min-date="minDate"
+                     max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                     ng-required="true" close-text="Close" required="required" style="">
+            </div>
+            <div class="col-md-4">
+              <h6>Provider</h6>
+
+              <div class="btn-group" dropdown>
+                <button id="split-button" type="button" class="btn btn-default">{{providers[selectedProvider]}}</button>
+                <button type="button" class="btn btn-default" dropdown-toggle>
+                  <span class="caret"></span>
+                  <span class="sr-only">Split button!</span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+                  <li role="menuitem" ng-repeat="provider in providers" ng-click="selectProvider($index)"><a href="#">{{provider}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4 pull-right text-right">
+              <h6>Pages</h6>
+              <pagination
+                total-items="totalRows"
+                ng-model="currentPage"
+                ng-change="pageChanged()"
+                direction-links="true"
+                items-per-page="pageSize"
+                ng-disabled="filtered.length == 0"
+                max-size="visiblePages"
+                previous-text="‹"
+                next-text="›"
+                ></pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="alert alert-warning" role="alert" ng-if="filtered.length === 0 && rows.length > 0">
+    Nothing matched your search. Try rephrasing or changing the date ranges.
+  </div>
+
+  <div class="alert alert-warning" role="alert" ng-if="loading.data">
+    Data is being loaded. Please be patient. We are sorry for the unnecessary delay.
+  </div>
+
+  <div class="alert alert-danger" role="alert" ng-if="rows.length === 0">
+    We were unable to fetch what you were looking for! Try refreshing the page.
+  </div>
+  <!--Generic-->
+  <table class="table-striped">
+    <thead>
+    <tr>
+      <th ng-repeat="header in tableHeaders" class="table-header-column">{{ header }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      ng-repeat="row in filtered = (rows | filter:searchText | dateRangeFilter:dateRangeFilteringInput:startPublishDate:endPublishDate | orderBy:orderByPredicate)">
+      <td class="table-column" ng-style="{width: widthPercentageForColumn}" ng-repeat="(key, value) in row">
+        <p>{{value}}</p>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,6 +1,6 @@
 // Let's do the nasty way for now- don't separate to different files
 angular.module('Controllers')
-  .controller('MainController', function ($scope,
+  .controller('ReportsCtrl', function ($scope,
                                           Reports, $parse, $filter) {
 
     // Define if data will be fetched from DB or read from csv file directly
@@ -10,30 +10,6 @@ angular.module('Controllers')
     $scope.searchText = '';
 
     $scope.tableHeaders = [];
-    // Provider selection
-    //$scope.shutterStockHeaders = [
-    //  'Article',
-    //  'Organization',
-    //  'Task Publish Date',
-    //  'Publish Channel',
-    //  'NC Image GUID',
-    //  'Shutterstock Image ID',
-    //  'Licensed Date'
-    //];
-    //
-    //$scope.gettyHeaders = [
-    //  'Article Task ID',
-    //  'Organization',
-    //  'Task Publish Date',
-    //  'Publish Channel',
-    //  'NC Image GUID',
-    //  'Shutterstock Image ID',
-    //  'Licensed Date'
-    //];
-    //$scope.templates = [
-    //  'views/components/shutterstock-report.html',
-    //  'views/components/getty-report.html'
-    //];
 
     $scope.providers = [
       'ShutterStock',

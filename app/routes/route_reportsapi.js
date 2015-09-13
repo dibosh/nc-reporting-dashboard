@@ -36,6 +36,42 @@ router.route('/api/report/all')
 
   });
 
+var _parseCSV = function (provider, callback) {
+  var csvConverter = new converter({constructResult:true});
+  var filePath = path.join(__dirname, provider == 0 ? '../../public/assets/shutterstock_data.csv' : '../../public/assets/getty_data.csv');
+  var fileStream = fs.createReadStream(filePath);
+  // end_parsed will be emitted once parsing finished
+  csvConverter.on('end_parsed', callback);
+  fileStream.pipe(csvConverter); // Start reading and parsing
+}
+
+router.route('/api/report/static/all/:provider')
+  // GET all rows
+  .get(function(req, res) {
+    // Retrieve all rows from CSV
+    var provider = req.params.provider;
+    var cacheKey = provider == 0 ? SHUTTERSTOCK_CSV_JSON_DATA : GETTY_CSV_JSON_DATA;
+    var data = serverCache.get(cacheKey);
+
+    if ( data == undefined ){
+      _parseCSV(provider, function (jsonObj) {
+        // Send the response
+        data = {
+          totalCount: jsonObj.length,
+          raw: jsonObj
+        };
+        var success = serverCache.set(cacheKey, data);
+        if (success){
+          console.log('Saved to cache...');
+          res.send(data);
+        }
+      });
+    }else{
+      console.log('Retrieved from cache. Sending response...');
+      res.send(data);
+    }
+  });
+
 router.route('/api/report/static/:provider/:pageno/:pagesize')
   // GET all rows
   .get(function(req, res) {
@@ -47,15 +83,11 @@ router.route('/api/report/static/:provider/:pageno/:pagesize')
     var data = serverCache.get(cacheKey);
 
     if ( data == undefined ){
-      var csvConverter = new converter({constructResult:true});
-      var filePath = path.join(__dirname, provider == 0 ? '../../public/assets/shutterstock_data.csv' : '../../public/assets/getty_data.csv');
-      var fileStream = fs.createReadStream(filePath);
-      // end_parsed will be emitted once parsing finished
-      csvConverter.on('end_parsed', function (jsonObj) {
+      _parseCSV(provider, function (jsonObj) {
         // Send the response
-        var data = {
+        data = {
           totalCount: jsonObj.length,
-          raw: _.chunk(jsonObj, pageSize)
+          raw: jsonObj
         };
         var success = serverCache.set(cacheKey, data);
         if (success){
@@ -63,17 +95,16 @@ router.route('/api/report/static/:provider/:pageno/:pagesize')
           res.send({
             total: data.totalCount,
             pageNo: pageNo,
-            pageData: data.raw[pageNo-1]
+            pageData: _.chunk(data.raw, pageSize)[pageNo-1]
           });
         }
       });
-      fileStream.pipe(csvConverter); // Start reading and parsing
     }else{
       console.log('Retrieved from cache. Sending response...');
       res.send({
         total: data.totalCount,
         pageNo: pageNo,
-        pageData: data.raw[pageNo-1]
+        pageData: _.chunk(data.raw, pageSize)[pageNo-1]
       });
     }
   });

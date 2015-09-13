@@ -18,7 +18,7 @@ application.config(['$routeProvider', '$locationProvider', function ($routeProvi
   $routeProvider
     .when('/home', {
       templateUrl: 'views/home.html',
-      controller: 'MainController'
+      controller: 'BaseCtrl'
     })
     .otherwise({ redirectTo: '/home' });
 
