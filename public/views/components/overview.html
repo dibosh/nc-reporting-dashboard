@@ -1,59 +1,17 @@
 <div class="panel panel-default" ng-controller="OverviewCtrl">
   <div class="panel-heading clearfix">
     <div class="col-md-3">
-      <h3>486</h3>
+      <h3>{{providerData.totalUsage}}</h3>
       <p>Total Usage</p>
     </div>
-    <div class="col-md-3">
-      <h3>280</h3>
-      <p>Getty Usage</p>
-    </div>
-    <div class="col-md-3">
-      <h3>286</h3>
-      <p>Shutterstock Usage</p>
-    </div>
-    <div class="col-md-3">
-      <h3>Monster UK</h3>
-      <p>Top User</p>
+    <div class="col-md-3" ng-repeat="(key, value) in providerData.records">
+      <h3>{{value.length}}</h3>
+      <p>{{key}}</p>
     </div>
   </div>
-  <form>
-    <div class="form-group">
-      <div class="filters">
-        <div class="row">
-          <div class="col-md-4">
-            <h6>Start Publish Date</h6>
-            <input type="date" class="form-control" ng-model="startPublishDate" is-open="status.opened"
-                   min-date="minDate"
-                   max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                   ng-required="true" close-text="Close" required="required" style="">
-          </div>
-          <div class="col-md-4">
-            <h6>End Publish Date</h6>
-            <input type="date" class="form-control" ng-model="endPublishDate" is-open="status.opened"
-                   min-date="minDate"
-                   max-date="'2020-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-                   ng-required="true" close-text="Close" required="required" style="">
-          </div>
-          <div class="col-md-4">
-            <h6>Client</h6>
-
-            <div class="btn-group" dropdown>
-              <button id="split-button" type="button" class="btn btn-default">{{providers[selectedProvider]}}</button>
-              <button type="button" class="btn btn-default" dropdown-toggle>
-                <span class="caret"></span>
-                <span class="sr-only">Split button!</span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                <li role="menuitem" ng-repeat="provider in providers" ng-click="selectProvider($index)"><a href="#">{{provider}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+  <div class="alert alert-warning" role="alert" ng-if="loading.data">
+    Data is being loaded. Please be patient. We are sorry for the unnecessary delay.
+  </div>
   <table class="table-striped usage-overview-table">
     <thead>
     <tr>

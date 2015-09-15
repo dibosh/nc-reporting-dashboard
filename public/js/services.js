@@ -1,16 +1,28 @@
 angular.module('Services')
   .factory('Reports', ['$http', function($http) {
   return {
-    all : function () {
-      return $http.get('/api/report/all');
+    fromServer : function () {
+      return {
+        allFromServer : function () {
+          return $http.get('/api/report/all');
+        }
+      };
     },
 
-    allFromFile : function (provider) {
-      return $http.get('/api/report/static/all/' + provider);
-    },
+    fromFile : function () {
+      return {
+        allForProvider : function (provider) {
+          return $http.get('/api/report/static/all/' + provider);
+        },
 
-    allFromPage : function (provider, pageNumber, pageSize) {
-      return $http.get('/api/report/static/' + provider + '/' + pageNumber + '/' + pageSize);
+        forAllProviders : function () {
+          return $http.get('/api/report/static/all');
+        },
+
+        forProviderFromPageWithSize : function (provider, pageNumber, pageSize) {
+          return $http.get('/api/report/static/' + provider + '/' + pageNumber + '/' + pageSize);
+        }
+      };
     }
   }
 }]);

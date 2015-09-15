@@ -1,11 +1,11 @@
 // Let's do the nasty way for now- don't separate to different files
 angular.module('Controllers')
   .controller('ReportsCtrl', function ($scope,
-                                          Reports, $parse, $filter) {
+                                       Reports, $filter) {
 
     // Define if data will be fetched from DB or read from csv file directly
     var usingStaticFile = true;
-    $scope.loading = { data : true };
+    $scope.loading = {data: true};
 
     $scope.searchText = '';
 
@@ -46,60 +46,54 @@ angular.module('Controllers')
     var isFirstTimeFetch = true; // If the data is being fetched for the first time
 
     var _fetchData = function () {
-      Reports.allFromPage($scope.selectedProvider, $scope.currentPage, $scope.pageSize).then(function (res) {
-        $scope.loading.data = false;
-        // Do some housekeeping on each rows
-        $scope.rows = _.map(res.data.pageData, function (row) {
-          var keyCounts = 0;
-          for (key in row){
-            keyCounts++;
-            if(key.toLowerCase().indexOf('date') > -1) row[key] = $filter('date')(new Date(row[key]), 'dd MMM, yyyy');
-            // Any ID except images should be just deleted
-            if(key.toLowerCase().indexOf('organizationid') > -1 || key.toLowerCase().indexOf('taskid') > -1) delete row[key]
-            else if(tableHeadersShouldBeGenerated) $scope.tableHeaders.push(key);
+      Reports.fromFile().forProviderFromPageWithSize($scope.selectedProvider, $scope.currentPage, $scope.pageSize)
+        .then(function (res) {
+          $scope.loading.data = false;
+          // Do some housekeeping on each rows
+          $scope.rows = _.map(res.data.pageData, function (row) {
+            var keyCounts = 0;
+            for (key in row) {
+              keyCounts++;
+              if (key.toLowerCase().indexOf('date') > -1) row[key] = $filter('date')(new Date(row[key]), 'dd MMM, yyyy');
+              // Any ID except images should be just deleted
+              if (key.toLowerCase().indexOf('organizationid') > -1 || key.toLowerCase().indexOf('taskid') > -1) delete row[key]
+              else if (tableHeadersShouldBeGenerated) $scope.tableHeaders.push(key);
+            }
+            $scope.widthPercentageForColumn = ((a = 100 / keyCounts) < 15 ? 15 : a) + '%';
+            tableHeadersShouldBeGenerated = false;
+            return row;
+          });
+          if (isFirstTimeFetch) {
+            $scope.totalRows = res.data.total;
+            isFirstTimeFetch = false;
           }
-          $scope.widthPercentageForColumn = ((a = 100/keyCounts) < 15 ? 15 : a) + '%';
-          tableHeadersShouldBeGenerated = false;
-          return row;
+          _setupData();
         });
-        if (isFirstTimeFetch){
-          $scope.totalRows = res.data.total;
-          isFirstTimeFetch = false;
-        }
-        _setupData();
-      });
     };
 
     if (usingStaticFile) {
       _fetchData();
-    } else {
-      Reports.all().then(function (res) {
-        $scope.loading.data = false;
-        // Sorted rows- latest one should be the first
-        $scope.rows = _.map(res.data, function (row) {
-          row.taskPublishDate = new Date(row.taskPublishDate);
-          row.licensedDate = new Date(row.licensedDate);
-          return row;
-        });
-        _setupData();
-      });
     }
     // Date range validation
-    $scope.$watch(function(scope) { return scope.startPublishDate },
-      function(newValue, oldValue) {
-        if (newValue && newValue.getTime() > $scope.endPublishDate.getTime()){
+    $scope.$watch(function (scope) {
+        return scope.startPublishDate
+      },
+      function (newValue, oldValue) {
+        if (newValue && newValue.getTime() > $scope.endPublishDate.getTime()) {
           $scope.startPublishDate = oldValue;
-        }else{
+        } else {
           $scope.startPublishDate = newValue;
         }
       }
     );
 
-    $scope.$watch(function(scope) { return scope.endPublishDate },
-      function(newValue, oldValue) {
-        if (newValue && newValue.getTime() < $scope.startPublishDate.getTime()){
+    $scope.$watch(function (scope) {
+        return scope.endPublishDate
+      },
+      function (newValue, oldValue) {
+        if (newValue && newValue.getTime() < $scope.startPublishDate.getTime()) {
           $scope.endPublishDate = oldValue;
-        }else{
+        } else {
           $scope.endPublishDate = newValue;
         }
       }
@@ -118,7 +112,7 @@ angular.module('Controllers')
 
       $scope.reportTime = $scope.endPublishDate;
 
-      if($scope.currentPage == 1) $scope.visibleRange = {
+      if ($scope.currentPage == 1) $scope.visibleRange = {
         start: 0,
         end: 0
       }; // Reset
