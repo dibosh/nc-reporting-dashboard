@@ -33,13 +33,13 @@
               <h6>Provider</h6>
 
               <div class="btn-group" dropdown>
-                <button id="split-button" type="button" class="btn btn-default">{{providers[selectedProvider]}}</button>
+                <button id="split-button" type="button" class="btn btn-default">{{providers[selectedProvider].title}}</button>
                 <button type="button" class="btn btn-default" dropdown-toggle>
                   <span class="caret"></span>
                   <span class="sr-only">Split button!</span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-                  <li role="menuitem" ng-repeat="provider in providers" ng-click="selectProvider($index)"><a href="#">{{provider}}</a>
+                  <li role="menuitem" ng-repeat="provider in providers" ng-click="selectProvider($index)"><a href="#">{{provider.title}}</a>
                   </li>
                 </ul>
               </div>

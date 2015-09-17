@@ -15,10 +15,12 @@ var serverCache = new nodeCache();
 var providers = [
   {
     key: 'shutterStock',
+    title: 'ShutterStock',
     filePath: '../../public/assets/shutterstock_data.csv'
   },
   {
     key: 'getty',
+    title: 'Getty Images',
     filePath: '../../public/assets/getty_data.csv'
   }
 ];
@@ -59,6 +61,7 @@ function produceJSONFromCSV(provider) {
       csvConverter.on('end_parsed', function (parsedResponse) {
         data = {
           providerKey: cacheKey,
+          providerTitle: providers[provider].title,
           records: parsedResponse
         };
         var success = serverCache.set(cacheKey, data);

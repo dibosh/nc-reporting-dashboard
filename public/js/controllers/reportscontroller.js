@@ -12,8 +12,14 @@ angular.module('Controllers')
     $scope.tableHeaders = [];
 
     $scope.providers = [
-      'ShutterStock',
-      'Getty'
+      {
+        title: 'ShutterStock',
+        dateFilter: 'taskPublishDate'
+      },
+      {
+        title: 'Getty Images',
+        dateFilter: 'publishDate'
+      }
     ];
 
     $scope.visibleRange = {
@@ -24,6 +30,15 @@ angular.module('Controllers')
     $scope.selectedProvider = 0;
 
     var tableHeadersShouldBeGenerated = true;
+
+    // Date range setup
+    $scope.startPublishDate = new Date();
+    $scope.endPublishDate = new Date();
+
+    $scope.startPublishDate.setMonth($scope.startPublishDate.getMonth() - 2); // The start date should be another month prior to end date
+    $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() - 1); // The end date should be from last month
+    $scope.reportTime = $scope.endPublishDate;
+
 
     $scope.selectProvider = function (index) {
       $scope.searchText = '';
@@ -67,7 +82,7 @@ angular.module('Controllers')
             $scope.totalRows = res.data.total;
             isFirstTimeFetch = false;
           }
-          _setupData();
+          _updateDynamicData();
         });
     };
 
@@ -91,7 +106,8 @@ angular.module('Controllers')
         return scope.endPublishDate
       },
       function (newValue, oldValue) {
-        if (newValue && newValue.getTime() < $scope.startPublishDate.getTime()) {
+        var today = new Date();
+        if ((newValue && newValue.getTime() < $scope.startPublishDate.getTime()) || (newValue && newValue.getTime() > today.getTime())) {
           $scope.endPublishDate = oldValue;
         } else {
           $scope.endPublishDate = newValue;
@@ -99,18 +115,9 @@ angular.module('Controllers')
       }
     );
 
-    var _setupData = function () {
-      $scope.dateRangeFilteringInput = $scope.selectedProvider == 0 ? 'taskPublishDate' : 'publishDate';
+    var _updateDynamicData = function () {
+      $scope.dateRangeFilteringInput = $scope.providers[$scope.selectedProvider].dateFilter;
       $scope.orderByPredicate = '-' + $scope.dateRangeFilteringInput;
-      var latestRecord = $scope.rows[0];
-      var oldestRecord = $scope.rows[$scope.rows.length - 1];
-      $scope.startPublishDate = new Date(oldestRecord.taskPublishDate || oldestRecord.publishDate);
-      $scope.endPublishDate = new Date(latestRecord.taskPublishDate || latestRecord.publishDate);
-      // Add some buffer of about 2 months
-      $scope.startPublishDate.setMonth($scope.startPublishDate.getMonth() - 1);
-      $scope.endPublishDate.setMonth($scope.endPublishDate.getMonth() + 1);
-
-      $scope.reportTime = $scope.endPublishDate;
 
       if ($scope.currentPage == 1) $scope.visibleRange = {
         start: 0,
@@ -119,4 +126,5 @@ angular.module('Controllers')
       $scope.visibleRange.start = $scope.visibleRange.end;
       $scope.visibleRange.end = $scope.visibleRange.start + $scope.rows.length;
     };
+
   });

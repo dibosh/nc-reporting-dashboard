@@ -5,7 +5,12 @@
 .dashboard{
     padding-top: 15px;
 }
-/*Table Style Override*/
+
+/* Helper Classes */
+.content-center {
+    text-align: center;
+}
+/* Table Style Override */
 .table{
     table-layout: fixed;
 }
@@ -49,6 +54,7 @@
     font-weight: 400;
 }
 
+/* Overview Tab */
 .usage-overview-table{
     width: 65%;
     border-right: 1px solid #ddd;
@@ -56,6 +62,15 @@
 
 .usage-graph-wrapper{
     width: 35%;
+}
+
+.overview-filter-pane {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.horizontal-column:not(:last-child) {
+    border-right: 1px solid #ddd;
 }
 
 

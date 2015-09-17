@@ -1,12 +1,29 @@
 <div class="panel panel-default" ng-controller="OverviewCtrl">
   <div class="panel-heading clearfix">
-    <div class="col-md-3">
-      <h3>{{providerData.totalUsage}}</h3>
-      <p>Total Usage</p>
+    <form>
+      <div class="form-group overview-filter-pane">
+        <div class="filters">
+          <div class="row">
+            <div class="col-md-4">
+              <h6>Start Publish Date</h6>
+              <input type="date" class="form-control" ng-model="startPublishDate" ng-required="true" close-text="Close" required="required" style="">
+
+            </div>
+            <div class="col-md-4">
+              <h6>End Publish Date</h6>
+              <input type="date" class="form-control" ng-model="endPublishDate" ng-required="true" close-text="Close" required="required" style="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div ng-class="columnClass" class="horizontal-column">
+      <h3>{{totalImageUsage}}</h3>
+      <p>Total Image Usage</p>
     </div>
-    <div class="col-md-3" ng-repeat="(key, value) in providerData.records">
-      <h3>{{value.length}}</h3>
-      <p>{{key}}</p>
+    <div ng-class="columnClass" class="horizontal-column" ng-repeat="(key, value) in providerData.records">
+      <h3>{{value.providerRecords.length}}</h3>
+      <p>{{value.title}}</p>
     </div>
   </div>
   <div class="alert alert-warning" role="alert" ng-if="loading.data">
