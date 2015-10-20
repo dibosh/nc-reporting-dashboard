@@ -62,6 +62,11 @@
 
 .usage-graph-wrapper{
     width: 35%;
+    padding: 20px;
+}
+
+.usage-overview-table, .usage-graph-wrapper {
+    float: left;
 }
 
 .overview-filter-pane {
@@ -71,6 +76,10 @@
 
 .horizontal-column:not(:last-child) {
     border-right: 1px solid #ddd;
+}
+
+.item-selected {
+    background-color: rgba(88,145,222, 0.1) !important;
 }
 
 

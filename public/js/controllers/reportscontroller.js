@@ -13,11 +13,11 @@ angular.module('Controllers')
 
     $scope.providers = [
       {
-        title: 'ShutterStock',
+        title: 'Shutterstock',
         dateFilter: 'taskPublishDate'
       },
       {
-        title: 'Getty Images',
+        title: 'Getty',
         dateFilter: 'publishDate'
       }
     ];

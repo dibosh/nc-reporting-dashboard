@@ -9,6 +9,7 @@ var application = angular.module('ReportingDashboard',
     'Controllers',
     'ui.bootstrap',
     'ngRoute',
+    'chart.js',
   ]
 )
   //.constant('_', window._);
