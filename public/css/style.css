@@ -55,18 +55,14 @@
 }
 
 /* Overview Tab */
-.usage-overview-table{
-    width: 65%;
-    border-right: 1px solid #ddd;
+
+.panel-heading {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .usage-graph-wrapper{
     width: 35%;
     padding: 20px;
-}
-
-.usage-overview-table, .usage-graph-wrapper {
-    float: left;
 }
 
 .overview-filter-pane {

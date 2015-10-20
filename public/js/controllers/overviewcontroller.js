@@ -7,6 +7,13 @@ angular.module('Controllers')
 
     $scope.rawData = {};
 
+    var _components = [
+      'views/components/godview.html',
+      'views/components/orgdetailview.html'
+    ];
+
+    $scope.shownComponent = _components[0];
+
     $scope.loading = {};
     $scope.providerDateFilters = {
       Shutterstock: 'taskPublishDate',
@@ -28,7 +35,15 @@ angular.module('Controllers')
 
     var isFirstTimeFetch = true; // If the data is being fetched for the first time
 
-    $scope.selectedItemIndex = 0;
+    $scope.selectedItemIndex = -1;
+
+    $scope.deselectItem = function () {
+      if ($scope.selectedItem){
+        $scope.selectedItem = null;
+        $scope.selectedItemIndex = -1;
+        $scope.shownComponent = _components[0];
+      }
+    }
 
     $scope.selectItem = function (index) {
       $scope.selectedItemIndex = index;
@@ -40,7 +55,8 @@ angular.module('Controllers')
       var endRange = new Date($scope.startPublishDate.getTime() + 10 * 24 * 3600 * 1000);
       var startRange = $scope.startPublishDate;
 
-
+      // Show detailed view
+      if ($scope.selectedItem) $scope.shownComponent = _components[1];
      };
 
     var _order = function(array, predicate) {

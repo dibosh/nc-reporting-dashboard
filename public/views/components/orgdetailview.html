@@ -1,0 +1,26 @@
+<div class="panel-heading clearfix">
+  <h4><a href="" ng-click="deselectItem()"><i class="glyphicon glyphicon-circle-arrow-left"></i></a> Detailed overview for <strong>{{selectedItem.organizationName}}</strong></h4>
+  <div ng-class="columnClass">
+    <h3>{{selectedItem.length}}</h3>
+    <p>Total Image Usage</p>
+  </div>
+  <div ng-class="columnClass" ng-repeat="provider in providerKeys">
+    <h3>{{selectedItem[provider].length}}</h3>
+    <p>{{provider}}</p>
+  </div>
+</div>
+<div class="usage-graph-wrapper">
+  <canvas id="line" class="chart chart-line" chart-data="chartData"
+          chart-labels="chartLabels" chart-options="chartOptions">
+  </canvas>
+  <pagination
+    total-items="selectedItem.length"
+    ng-model="currentPage"
+    ng-change="pageChanged()"
+    direction-links="true"
+    items-per-page="pageSize"
+    max-size="visiblePages"
+    previous-text="‹"
+    next-text="›"
+    ></pagination>
+</div>
